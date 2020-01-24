@@ -15,11 +15,11 @@ def convert_dump_to_npy_timeseries(input_file, outfile_prefix=""):
     vel_timeseries = np.zeros((n_atoms, dims, n_time_windows))
     magnitude_timeseries = np.zeros((n_atoms, n_time_windows))
 
-    for t in range(n_time_windows):
-        start_read = t*(n_atoms + n_info_lines) + n_info_lines
-        vel_timeseries[:,:,t] = np.loadtxt(input_file, skiprows=start_read, usecols=(1, 2, 3), max_rows=n_atoms)
-        magnitude_timeseries[:, t] = np.sum(np.abs(vel_timeseries[:,:,t])**2, axis=1)**(1./2)
-        print("t: ", t)
+    # for t in range(n_time_windows):
+    #     start_read = t*(n_atoms + n_info_lines) + n_info_lines
+    #     vel_timeseries[:,:,t] = np.loadtxt(input_file, skiprows=start_read, usecols=(1, 2, 3), max_rows=n_atoms)
+    #     magnitude_timeseries[:, t] = np.sum(np.abs(vel_timeseries[:,:,t])**2, axis=1)**(1./2)
+    #     print("t: ", t)
 
 
     # infile = open(input_file, 'r')
@@ -30,18 +30,15 @@ def convert_dump_to_npy_timeseries(input_file, outfile_prefix=""):
     #         trash = infile.readline()
     #     vel_timeseries[,:,]
 
+    infile = open(input_file, 'r')
 
-
-    i = 0
-    t = 0
-    with open(input_file, 'r') as infile:
+    for t in range(n_time_windows):
+        print('t: ', t)
         for _ in range(n_info_lines):
             trash = infile.readline()
-        line = infile.readline()
 
-        vel_timeseries[i,:] = np.genfromtxt()
-
-
+        for i in range(n_atoms):
+            vel_timeseries[i,:,t] = np.fromstring(infile.readline()[1:], dtype='float', count=3, sep=' ')
 
 
     np.save(outfile_prefix + 'magnitude_timeseries.npy', magnitude_timeseries)

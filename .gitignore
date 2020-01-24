@@ -37,6 +37,9 @@
 *.txt
 *.csv
 *.npy
+*.lammpstrj
+*.lammps
+*.txt
 
 
 # Misc. files

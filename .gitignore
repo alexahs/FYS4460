@@ -39,6 +39,7 @@
 *.npy
 *.lammpstrj
 *.lammps
+dump.*
 *.txt
 log.*
 

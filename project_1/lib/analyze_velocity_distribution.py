@@ -4,10 +4,9 @@ import sys, time
 
 
 
-def convert_dump_to_npy_timeseries(input_file, outfile_prefix=""):
-    n_atoms = 4000
-    n_timesteps = 5000
-    steps_per_window = 10
+
+def convert_dump_to_npy_timeseries(data_dir, input_file, outfile_prefix="", n_atoms = 4000, n_timesteps = 5000, steps_per_window = 10):
+
     n_time_windows = int(n_timesteps/steps_per_window)
     dims = 3
     n_info_lines = 9
@@ -15,20 +14,6 @@ def convert_dump_to_npy_timeseries(input_file, outfile_prefix=""):
     vel_timeseries = np.zeros((n_atoms, dims, n_time_windows))
     magnitude_timeseries = np.zeros((n_atoms, n_time_windows))
 
-    # for t in range(n_time_windows):
-    #     start_read = t*(n_atoms + n_info_lines) + n_info_lines
-    #     vel_timeseries[:,:,t] = np.loadtxt(input_file, skiprows=start_read, usecols=(1, 2, 3), max_rows=n_atoms)
-    #     magnitude_timeseries[:, t] = np.sum(np.abs(vel_timeseries[:,:,t])**2, axis=1)**(1./2)
-    #     print("t: ", t)
-
-
-    # infile = open(input_file, 'r')
-    # n_lines = 0
-    # for t in range(n_time_windows):
-    #     print("t: ", t)
-    #     for _ in range(n_info_lines):
-    #         trash = infile.readline()
-    #     vel_timeseries[,:,]
 
     infile = open(input_file, 'r')
 
@@ -41,12 +26,12 @@ def convert_dump_to_npy_timeseries(input_file, outfile_prefix=""):
             vel_timeseries[i,:,t] = np.fromstring(infile.readline()[1:], dtype='float', count=3, sep=' ')
 
 
-    np.save(outfile_prefix + 'magnitude_timeseries.npy', magnitude_timeseries)
-    np.save(outfile_prefix + 'velocity_timeseries.npy', vel_timeseries)
+    np.save(data_dir + outfile_prefix + 'magnitude_timeseries.npy', magnitude_timeseries)
+    np.save(data_dir + outfile_prefix + 'velocity_timeseries.npy', vel_timeseries)
 
 
 
-def plot_hist(arr, component=2, n_bins=20):
+def plot_hist(arr, component=1, n_bins=20):
 
     n_steps = arr.shape[-1]
     final_hist, _ = np.histogram(arr[:,component,-1], bins=n_bins)
@@ -64,20 +49,21 @@ def plot_hist(arr, component=2, n_bins=20):
 
 
 
-def main():
+def analyze_velocity_distribution(data_dir):
     try:
         convert_dump = int(sys.argv[1])
     except:
         convert_dump = None
 
 
+
     if convert_dump == 1:
-        infile = "dump.lammpstrj"
-        convert_dump_to_npy_timeseries(infile)
+        infile = data_dir + "/dump.lammpstrj"
+        convert_dump_to_npy_timeseries(data_dir, infile)
 
 
-    vel_npy = "velocity_timeseries.npy"
-    magn_npy = "magnitude_timeseries.npy"
+    vel_npy = data_dir + "/velocity_timeseries.npy"
+    magn_npy = data_dir + "/magnitude_timeseries.npy"
 
     magnitude_timeseries = np.load(magn_npy)
     velocity_timeseries = np.load(vel_npy)
@@ -88,24 +74,5 @@ def main():
 
 
 
-if __name__ == '__main__':
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    #
+# if __name__ == '__main__':
+    # analyze_velocity_distribution()

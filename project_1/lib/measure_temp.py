@@ -56,7 +56,6 @@ def compute_temp(filename, n_time_windows = 1000):
 
 
 
-
 def measure_temp(data_dir):
 
     infile  = data_dir + "/dump.lammpstrj"

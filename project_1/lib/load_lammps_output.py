@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+from tqdm import tqdm
 
 
 def read_thermo(dir, filename,
@@ -56,10 +58,10 @@ def read_dump(dir, filename,
 
     start_read = 0 if read_atom_id == True else 1
 
-
+    pc0 = 0
     with open(dir + filename, 'r') as infile:
-        for t in range(n_time_windows):
-            print("t= ", t, "/", n_time_windows)
+        for t in tqdm(range(n_time_windows)):
+            # print("t= ", t, "/", n_time_windows)
             for _ in range(n_info_lines):
                 skipline = infile.readline()
 
@@ -73,29 +75,6 @@ def read_dump(dir, filename,
         np.save(dir + 'dump.npy', results)
 
     return results
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

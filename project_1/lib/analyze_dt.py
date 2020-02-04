@@ -5,25 +5,6 @@ from .load_lammps_output import *
 
 
 
-def read_log(filename, n_read_lines, n_types):
-
-
-
-    #temp, PotEng, KinEng, TotEng
-    measurements = np.zeros((n_read_lines, 4))
-
-
-    with open(filename, 'r') as infile:
-        for line in infile:
-            if line[:4] == "Temp":
-                for i in range(n_read_lines):
-                    measurements[i] = np.fromstring(infile.readline(), dtype='float', count=4, sep=' ')
-
-    return measurements
-
-
-
-
 def analyze_dt(dir):
 
 
@@ -48,10 +29,13 @@ def analyze_dt(dir):
 
 
     for i in range(n_files):
-        label = "%s" %filenames[i][3:]
+        label = "%s" %filenames[i][4:]
         # plt.plot(list(range(measurements.shape[0])), measurements[:,1, i], label='PotEng')
         # plt.plot(list(range(measurements.shape[0])), measurements[:,2, i], label='KinEng')
         plt.plot(list(range(measurements.shape[0])), measurements[:,3, i], label=label) #totEng
 
+
+    plt.xlabel(r"$t_i$")
+    plt.ylabel(r"Total energy $E/\epsilon$")
     plt.legend()
     plt.show()

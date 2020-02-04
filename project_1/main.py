@@ -16,11 +16,12 @@ def main():
 
     dir = get_sim_path("a", 1)
 
+    # analyze_dt(dir)
 
+    vel = read_dump(dir, "dump.lammpstrj", n_time_steps=5000)
+    # vel = np.load(dir + "dump.npy")
 
-    vel = np.load(dir + "dump.npy")
-
-    plot_velocity_distribution(vel)
+    # plot_velocity_distribution(vel)
 
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
-from lib.analyze_velocity_distribution import *
+from lib.plot_velocity_distribution import *
 
 
 

@@ -1,6 +1,6 @@
-from .read_thermo_log import *
+from .load_lammps_output import *
 from .analyze_dt import *
-from .analyze_velocity_distribution import *
+from .plot_velocity_distribution import *
 from .measure_temp import *
 from .plot_temp_press import *
 

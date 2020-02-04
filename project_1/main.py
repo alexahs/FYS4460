@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
-# from lib.analyze_velocity_distribution import *
-# from lib.analyze_dt import *
-# from lib.measure_temp import *
-# from lib.read_thermo_log import *
 from lib import *
 
 
@@ -17,7 +13,9 @@ def get_sim_path(part, sim):
 
 def main():
 
-    dir = get_sim_path("d", 1)
+    dir = get_sim_path("b", 1)
+
+    analyze_dt(dir)
 
     # analyze_velocity_distribution(dir_part_a)
     # analyze_dt(dir_part_b)
@@ -27,8 +25,11 @@ def main():
 
     # print(temp_press)
 
-    plot_temp_press(dir=dir)
+    # plot_temp_press(dir=dir)
 
+    # vel = read_dump(dir, "dump.lammpstrj", n_time_steps=5000, save_to_npy=True)
+    # vel = np.load(dir + "dump.npy")
+    # analyze_velocity_distribution(vel, vel_component=1)
 
     exit(1)
 

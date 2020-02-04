@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from .read_thermo_log import *
+from .load_lammps_output import *
 
 
 def plot_temp_press(dir):

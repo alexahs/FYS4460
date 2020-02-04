@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
+from .load_lammps_output import *
 
 
 
@@ -23,10 +24,10 @@ def read_log(filename, n_read_lines, n_types):
 
 
 
-def analyze_dt(data_dir):
+def analyze_dt(dir):
 
 
-    items = os.listdir(data_dir)
+    items = os.listdir(dir)
 
 
     filenames = []
@@ -39,10 +40,11 @@ def analyze_dt(data_dir):
     n_read_lines = 101
     n_types = 4
 
+    quantities = "Temp PotEng KinEng TotEng"
 
     measurements = np.zeros((n_read_lines, n_types, n_files))
     for i in range(n_files):
-        measurements[:,:,i] = read_log(data_dir + filenames[i], n_read_lines, n_types)
+        measurements[:,:,i] = read_thermo(dir, filenames[i], quantities)
 
 
     for i in range(n_files):

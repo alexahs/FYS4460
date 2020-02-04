@@ -24,7 +24,7 @@ dump 1 all custom 10 dump.lammpstrj id vx vy vz
 
 thermo 100                              #output results to terminal and logfile 'log.lammps' every 100 time steps
 
-run 10000                                #run simulation for 5000 time steps
+run 5000                                #run simulation for 5000 time steps
 
 
 

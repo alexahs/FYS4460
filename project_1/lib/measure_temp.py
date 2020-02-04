@@ -5,54 +5,24 @@ from lib.plot_velocity_distribution import *
 
 
 
+def compute_temp(velocities):
 
-def convert_dump_to_npy(data_dir, input_file, n_atoms = 4000, n_timesteps = 10000, steps_per_window = 10):
-
-    n_time_windows = int(n_timesteps/steps_per_window)
-    dims = 3
-    n_info_lines = 9
-
-    vel_timeseries = np.zeros((n_atoms, dims, n_time_windows))
-
-
-    infile = open(input_file, 'r')
-
-    pc0 = 0
-    for t in range(n_time_windows):
-        for _ in range(n_info_lines):
-            trash = infile.readline()
-
-        for i in range(n_atoms):
-            vel_timeseries[i,:,t] = np.fromstring(infile.readline()[1:], dtype='float', count=3, sep=' ')
-
-        pc = int((t / n_time_windows)*100)
-        if pc0 != pc:
-            pc0 = pc
-            print(pc, "%")
-
-    outfile = 'velocity_timeseries.npy'
-
-    np.save(data_dir + outfile, vel_timeseries)
-    print("dump converted to " + data_dir + outfile)
-
-    return None
-
-def compute_temp(filename, n_time_windows = 1000):
-
-
-    velocities = np.load(filename)
-
-
+    n_time_windows = 500
     temperatures = np.zeros(velocities.shape[2])
+
 
     for i in range(n_time_windows):
         temperatures[i] = np.sum(np.sum(velocities[:,:,i]**2, axis = 1))
 
 
 
-    temperatures /= 3
+    temperatures /= 3*4000
 
-    plot_hist(velocities, component=0)
+    # plot_velocity_distribution(velocities, vel_components = [1])
+
+    plt.plot(range(len(temperatures)), temperatures)
+    plt.show()
+    # print(temperatures)
 
 
 

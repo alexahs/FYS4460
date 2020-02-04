@@ -38,7 +38,8 @@ def read_thermo(dir, filename,
             if line[:n_chars] == names_of_measurements:
                 for i in range(n_read_lines):
                     results[i] = np.fromstring(infile.readline(), dtype='float', count=n_types, sep=' ')
-
+        infile.close()
+        
     return results
 
 
@@ -49,30 +50,30 @@ def read_dump(dir, filename,
               n_info_lines = 9,
               n_types = 3,
               dims = 3,
-              read_atom_id = False,
               save_to_npy = False):
 
     n_time_windows = int(n_time_steps/step_window)
 
     results = np.zeros((n_atoms, dims, n_time_windows))
 
-    start_read = 0 if read_atom_id == True else 1
 
-    pc0 = 0
+    print('Loading dump..')
     with open(dir + filename, 'r') as infile:
         for t in tqdm(range(n_time_windows)):
-            # print("t= ", t, "/", n_time_windows)
             for _ in range(n_info_lines):
                 skipline = infile.readline()
 
             for i in range(n_atoms):
-                results[i,:,t] = np.fromstring(infile.readline()[start_read:],
+                results[i,:,t] = np.fromstring(infile.readline(),
                                                dtype='float',
                                                count=n_types,
                                                sep=' ')
+        infile.close()
 
     if save_to_npy:
-        np.save(dir + 'dump.npy', results)
+        savefile = dir + 'dump.npy'
+        np.save(savefile, results)
+        print('Dump saved to %s' %savefile)
 
     return results
 

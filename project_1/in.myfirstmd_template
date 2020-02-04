@@ -1,3 +1,8 @@
+variable TIME_STEPS equal 10000
+variable THERMO_STEP equal 100
+variable DUMP_STEP equal 10
+
+
 #3d Lennard-Jones gas
 units lj                                #Lennard-Jones units
 dimension 3                             #3 dimensions
@@ -20,11 +25,11 @@ fix 1 all nve                           #specify what type of simulation, fix (c
 
 
 #dump (name 1) all atom states every 10 time steps, to file 'dump.lammpstrj' with format 'atom id, atom type, pos, vel'
-dump 1 all custom 10 dump.lammpstrj id type x y z vx vy vz
+dump 1 all custom ${DUMP_STEP} dump.lammpstrj id type x y z vx vy vz
 
-thermo 100                              #output results to terminal and logfile 'log.lammps' every 100 time steps
+thermo ${THERMO_STEP}                              #output results to terminal and logfile 'log.lammps' every 100 time steps
 
-run 5000                                #run simulation for 5000 time steps
+run ${TIME_STEPS}                                #run simulation for 5000 time steps
 
 
 

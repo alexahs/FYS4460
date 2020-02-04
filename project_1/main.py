@@ -19,10 +19,21 @@ def main():
 
     # analyze_dt(dir)
 
-    vel = read_dump(dir, "dump.lammpstrj", n_time_steps=5000)
+    vel = read_dump(dir, "dump.lammpstrj", n_time_steps=10000, save_to_npy=True)
     # vel = np.load(dir + "dump.npy")
 
-    # plot_velocity_distribution(vel)
+    # print(vel.shape)
+
+    # print(vel[:, 0, 198:203])
+
+    plot_velocity_distribution(vel)
+    # compute_temp(vel)
+
+    # temp_pressure = read_thermo(dir, "log.lammps", "Temp Press")
+
+
+    # plot_pressure(temp_pressure)
+
 
 
 

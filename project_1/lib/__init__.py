@@ -2,7 +2,7 @@ from .load_lammps_output import *
 from .analyze_dt import *
 from .plot_velocity_distribution import *
 from .measure_temp import *
-from .plot_temp_press import *
+from .plot_pressure import *
 
 
 
@@ -22,4 +22,3 @@ from .plot_temp_press import *
 #         __all__.append(file[:-3])
 #
 # # print(__all__)
- 

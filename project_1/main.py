@@ -15,24 +15,19 @@ def get_sim_path(part, sim):
 
 def main():
 
-    dir = get_sim_path("a", 1)
+    dir = get_sim_path("d", 1)
 
     # analyze_dt(dir)
 
-    vel = read_dump(dir, "dump.lammpstrj", n_time_steps=10000, save_to_npy=True)
+    # vel = read_dump(dir, "dump.lammpstrj", n_time_steps=10000, save_to_npy=True)
     # vel = np.load(dir + "dump.npy")
 
-    # print(vel.shape)
-
-    # print(vel[:, 0, 198:203])
-
-    plot_velocity_distribution(vel)
-    # compute_temp(vel)
 
     # temp_pressure = read_thermo(dir, "log.lammps", "Temp Press")
 
 
-    # plot_pressure(temp_pressure)
+    plot_pressure(dir)
+
 
 
 

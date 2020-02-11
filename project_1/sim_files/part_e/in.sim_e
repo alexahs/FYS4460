@@ -11,9 +11,9 @@ atom_style atomic                       #simplest atom model, used for noble gas
 
 
 ###LOOP 1###
-label T_loop_1
-#variable T file T_vals.txt
-variable loop 20
+label T_loop
+variable T_1 loop 10
+variable T equal ${T_1}*0.5
 lattice fcc 0.01                        #generates "face-centered-cubic" lattice points with scale 0.01 (reduced density)
 region simbox block 0 10 0 10 0 10      #define block region and give it the name "simbox"
 create_box 1 simbox                     #create the simulation box, which will contain only 1 type of atoms
@@ -37,12 +37,12 @@ log log.T_${T}
 
 thermo ${THERMO_STEP}                              #output results to terminal and logfile 'log.lammps' every 100 time steps
 
-timestep 0.0025
+#timestep 0.0025
 run ${TIME_STEPS}                                #run simulation for 5000 time steps
 
 clear
-next T
-jump SELF T_loop_1
+next T_1
+jump SELF T_loop
 
 
 

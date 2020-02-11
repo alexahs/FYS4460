@@ -4,9 +4,14 @@ import os
 from .load_lammps_output import *
 
 
+def idea_gas_law(T):
+    #P=NkT/V in lj units -> T*0.01 (lattice fcc = 0.01)
+    rho = 0.01
+    return T*rho
+
+
 def plot_pressure(dir):
 
-    # print(os.listdir(dir))
 
     dir_files = os.listdir(dir)
 
@@ -21,6 +26,10 @@ def plot_pressure(dir):
     n_time_steps = 10000
     step_window = 100
 
+    n_files = len(log_files)
+    mean_temp = np.zeros(n_files)
+    mean_press = np.zeros(n_files)
+
 
     for i, filename in enumerate(log_files):
         data = read_thermo(dir, filename,
@@ -29,9 +38,21 @@ def plot_pressure(dir):
                            step_window)
         #
         # data.shape = (101, 2)
-        mean_temp = np.mean(data[90:-1,0], axis=0)
-        mean_press = np.mean(data[90:-1,1], axis=0)
-        print(mean_temp.shape)
+        mean_temp[i] = np.mean(data[-10:-1, 0])
+        mean_press[i] = np.mean(data[-10:-1, 1])
+        # print(data[90:-1,0])
+
+    idx = np.argsort(mean_temp)
+
+    print(mean_press[idx])
+    print(mean_temp[idx])
+
+    plt.plot(mean_temp[idx], mean_press[idx], label='simulated')
+    plt.plot(mean_temp[idx], idea_gas_law(mean_temp[idx]), label='P=NkT/V')
+    plt.xlabel(r"Pressure $[\epsilon/k_b]$")
+    plt.ylabel(r"Temperature $[\sigma^3 / \epsilon]$")
+    plt.legend()
+    plt.show()
 
     # print(temp_press)
 

@@ -1,0 +1,87 @@
+variable TIME_STEPS equal 30000
+variable THERMO_STEP equal 100
+variable DUMP_STEP equal 10
+
+#3d Lennard-Jones gas
+units lj                                #Lennard-Jones units
+dimension 3                             #3 dimensions
+boundary p p p                          #periodic boundary conditions in all directions
+atom_style atomic                       #simplest atom model, used for noble gases and coarse grained models
+
+# create_box 1 simbox                     #create the simulation box, which will contain only 1 type of atoms
+# create_atoms 1 box                      #create atoms and fill the simbox we have defined using the lattice we have defined with atoms of type 1
+#
+# mass 1 1.0                              #define atom 1 to have a mass of 1.0 (relative to the mass of the LJ model)
+# velocity all create ${T} 87287           #generate gauss distributed velocities with seed 87287, such that the temperature for all atom types in the system is 2.5
+#
+# pair_style lj/cut 3.0                   #define cutoff length of 3.0 (in units of sigma)
+# pair_coeff 1 1 1.0 1.0 3.0              #specify the parameters of the LJ model -> interactions between atom types 1 and 1 (1.0 = general sigma value, 1.0 = overall eps value, 3.0 = cutoff)
+
+# fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
+
+
+variable T0         equal 0.7
+variable T1         equal 0.73
+variable n_temps    equal 1
+
+###LOOP 1###
+label T_loop
+variable iter loop ${n_temps}
+variable T equal ${T0}+(${T1}-${T0})*(${iter}-1)/${n_temps}
+
+lattice fcc 0.01                        #generates "face-centered-cubic" lattice points with scale 0.01 (reduced density)
+region simbox block 0 10 0 10 0 10      #define block region and give it the name "simbox"
+create_box 1 simbox                     #create the simulation box, which will contain only 1 type of atoms
+create_atoms 1 box                      #create atoms and fill the simbox we have defined using the lattice we have defined with atoms of type 1
+
+mass 1 1.0                              #define atom 1 to have a mass of 1.0 (relative to the mass of the LJ model)
+velocity all create ${T} 87287           #generate gauss distributed velocities with seed 87287, such that the temperature for all atom types in the system is 2.5
+
+pair_style lj/cut 3.0                   #define cutoff length of 3.0 (in units of sigma)
+pair_coeff 1 1 1.0 1.0 3.0              #specify the parameters of the LJ model -> interactions between atom types 1 and 1 (1.0 = general sigma value, 1.0 = overall eps value, 3.0 = cutoff)
+
+fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
+
+#equilibriate
+# thermo 1000
+# run 10000
+#
+# reset_timestep 0
+
+#collect data
+
+compute msd all msd                 #compute mean squared displacement
+
+thermo_style custom c_msd[4]
+
+log log.msd_T_${T}
+
+#dump (name 1) all atom states every 10 time steps, to file 'dump.lammpstrj' with format 'atom id, atom type, pos, vel'
+#dump 1 all custom ${DUMP_STEP} dump.lammpstrj id vx vy vz
+
+thermo ${THERMO_STEP}                              #output results to terminal and logfile 'log.lammps' every 100 time steps
+
+#timestep 0.0025
+run ${TIME_STEPS}                                #run simulation for 5000 time steps
+
+clear
+next iter
+jump SELF T_loop
+
+
+
+
+
+
+
+### Loops in lammps ###
+
+#label dt_loop
+#variable dt index 0.001 0.01 0.1 ...
+#...
+#dump dump.dt_${dt}
+#...
+#run 1000
+#clear
+#next dt
+#jump SELF dt_loop

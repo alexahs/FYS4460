@@ -12,3 +12,10 @@ TODO:
  - plot (PV) = (NkT) for varying temp and density
  - plot (P + a(N/V)**2)(V - Nb) = (NkT) for varying temp and density
 """
+
+
+
+
+
+
+#

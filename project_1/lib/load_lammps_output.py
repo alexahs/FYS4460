@@ -39,7 +39,7 @@ def read_thermo(dir, filename,
                 for i in range(n_read_lines):
                     results[i] = np.fromstring(infile.readline(), dtype='float', count=n_types, sep=' ')
         infile.close()
-        
+
     return results
 
 
@@ -76,6 +76,8 @@ def read_dump(dir, filename,
         print('Dump saved to %s' %savefile)
 
     return results
+
+
 
 
 

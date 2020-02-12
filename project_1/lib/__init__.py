@@ -4,6 +4,8 @@ from .plot_velocity_distribution import *
 from .measure_temp import *
 from .plot_pressure import *
 from .compare_gas_laws import *
+from .estimate_diffusion import *
+from .radial_distribution import *
 
 
 

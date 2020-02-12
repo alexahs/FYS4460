@@ -42,6 +42,7 @@
 dump.*
 *.txt
 log.*
+tmp.*
 
 
 # Misc. files

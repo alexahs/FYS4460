@@ -6,6 +6,8 @@ from .plot_pressure import *
 from .compare_gas_laws import *
 from .estimate_diffusion import *
 from .radial_distribution import *
+from .test_thermostat import *
+from .silicon_states import *
 
 
 

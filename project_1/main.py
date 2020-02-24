@@ -15,20 +15,16 @@ def get_sim_path(part, sim):
 
 def main():
 
-    dir = get_sim_path("g", 1)
+    dir = get_sim_path("i", 1)
 
 
 
-    plot_radial_distribution(dir)
-
-
-
+    # plot_radial_distribution(dir)
+    # estimate_diffusion(dir)
+    berendsen(dir, filename='log.lammps')
 
 
     exit(1)
-
-
-
 
 
 

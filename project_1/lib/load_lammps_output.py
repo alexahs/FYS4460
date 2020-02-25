@@ -1,12 +1,57 @@
 import numpy as np
 import sys
+import os
 from tqdm import tqdm
 
 
-def read_thermo(dir, filename,
-                names_of_measurements,
-                n_time_steps = 10000,
-                step_window = 100):
+
+def get_params(dir, lmp_suffix='.lmp',
+                       env_start = '#assign params',
+                       env_stop = '#end assign params'):
+
+    files = np.array(os.listdir(dir))
+    params = {}
+    lmp_script = None
+
+    for f in files:
+        if f[-4:] == lmp_suffix:
+            lmp_script = f
+            break
+
+    if lmp_script == None:
+        print('LAMMPS script not found in {}'.format(dir))
+        exit(1)
+    else:
+        print('Looking up parameters from {}..'.format(lmp_script))
+
+
+    with open(dir + lmp_script, 'r') as infile:
+        infile.readline()
+        while True:
+            words = infile.readline().split()
+            if words[0] == env_stop.split()[0]:
+                break
+            else:
+                var_name = words[1]
+                var_val = words[-1]
+                try:
+                    params[var_name] = int(var_val)
+                except:
+                    print("Unable to convert {} to integer".format(var_val))
+                    exit(1)
+    infile.close()
+
+    print('Parameters:')
+    for key in params:
+        print(key, params[key])
+
+    return params
+
+
+
+
+
+def read_thermo(dir, filename, names_of_measurements):
     """
     Function for reading LAMMPS thermo log files.
 
@@ -17,15 +62,17 @@ def read_thermo(dir, filename,
             name of the log file.
         names_of_measurements : string
             names of the measurements (for pattern matching, case sensitive).
-        n_time_steps : int
-            number of time steps in simulation
-        step_window : int
-            number of time steps between each write in the log file.
 
     Returns:
         results : array
             contains the quantities read from the log file.
     """
+
+    params = get_params(dir)
+
+    n_time_steps = params['TIME_STEPS']
+    step_window = params['THERMO_STEP']
+
 
     n_read_lines = int (n_time_steps/step_window) + 1
     n_types = names_of_measurements.count(" ") + 1
@@ -44,13 +91,15 @@ def read_thermo(dir, filename,
 
 
 def read_dump(dir, filename,
-              n_time_steps = 10000,
-              step_window = 10,
               n_atoms = 4000,
               n_info_lines = 9,
               n_types = 3,
               dims = 3,
               save_to_npy = False):
+
+    params = get_params(dir)
+    n_time_steps = params['TIME_STEPS']
+    step_window = params['DUMP_STEP']
 
     n_time_windows = int(n_time_steps/step_window)
 

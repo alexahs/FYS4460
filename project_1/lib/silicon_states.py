@@ -9,3 +9,8 @@ import matplotlib.pyplot as plt
 TODO:
 Visualize systems of silicon in solid, liquid and gas states
 """
+
+
+def silicon_diffusion(dir, filename):
+
+    return 1

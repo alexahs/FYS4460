@@ -6,7 +6,7 @@ from .load_lammps_output import *
 
 
 def read_rdf_dump(dir, filename,
-                  n_time_steps = 10000,
+                  n_time_steps = 1000,
                   step_window = 100,
                   n_bins = 50,
                   n_info_lines = 3):
@@ -18,8 +18,10 @@ def read_rdf_dump(dir, filename,
 
     Returns: array of radial distances and avg g(r)
     """
-
-    n_time_windows = int(n_time_steps/step_window) +1
+    params = get_params(dir)
+    n_time_windows = params['TIME_STEPS']
+    step_window = params['THERMO_STEP']
+    # n_time_windows = int(n_time_steps/step_window) +1
 
     radials = np.zeros((n_bins, n_time_windows))
     bin_distances = np.zeros(n_bins)
@@ -77,7 +79,7 @@ def plot_radial_distribution(dir,
 
     log_files = np.sort(log_files)
     # print(log_files)
-    
+
     for file in log_files:
         bins, radials = read_rdf_dump(dir, file)
         plt.plot(bins, radials, label="T=" + file[10:])

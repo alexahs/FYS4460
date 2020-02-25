@@ -15,7 +15,7 @@ def get_sim_path(part, sim):
 
 def main():
 
-    dir = get_sim_path("f", 1)
+    dir = get_sim_path("g", 1)
 
 
     plot_radial_distribution(dir)

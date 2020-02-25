@@ -7,7 +7,8 @@ from tqdm import tqdm
 
 def get_params(dir, lmp_suffix='.lmp',
                        env_start = '#assign params',
-                       env_stop = '#end assign params'):
+                       env_stop = '#end assign params',
+                       verbose = False):
 
     files = np.array(os.listdir(dir))
     params = {}
@@ -22,7 +23,8 @@ def get_params(dir, lmp_suffix='.lmp',
         print('LAMMPS script not found in {}'.format(dir))
         exit(1)
     else:
-        print('Looking up parameters from {}..'.format(lmp_script))
+        if verbose:
+            print('Looking up parameters from {}..'.format(lmp_script))
 
 
     with open(dir + lmp_script, 'r') as infile:
@@ -41,9 +43,10 @@ def get_params(dir, lmp_suffix='.lmp',
                     exit(1)
     infile.close()
 
-    print('Parameters:')
-    for key in params:
-        print(key, params[key])
+    if verbose:
+        print('Parameters:')
+        for key in params:
+            print(key, params[key])
 
     return params
 

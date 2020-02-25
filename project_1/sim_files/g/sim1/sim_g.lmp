@@ -1,6 +1,9 @@
-variable TIME_STEPS equal 10000
-variable THERMO_STEP equal 100
+#assign params
+variable TIME_STEPS equal 1000
+variable THERMO_STEP equal 10
 variable DUMP_STEP equal 10
+#end assign params
+
 variable T equal 2
 
 #3d Lennard-Jones gas
@@ -19,6 +22,7 @@ atom_style atomic                       #simplest atom model, used for noble gas
 # pair_coeff 1 1 1.0 1.0 3.0              #specify the parameters of the LJ model -> interactions between atom types 1 and 1 (1.0 = general sigma value, 1.0 = overall eps value, 3.0 = cutoff)
 
 # fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
+
 
 
 lattice fcc 0.01                        #generates "face-centered-cubic" lattice points with scale 0.01 (reduced density)

@@ -15,17 +15,16 @@ def get_sim_path(part, sim):
 
 def main():
 
-    dir = get_sim_path("k", 1)
+    dir = get_sim_path("f", 1)
 
 
-
-    # plot_radial_distribution(dir)
+    plot_radial_distribution(dir)
     # estimate_diffusion(dir)
     # berendsen(dir, filename='log.lammps')
     # get_variables(dir)
 
-    data = read_thermo(dir, "log.T_400", "Temp")
-    print(data)
+    # data = read_thermo(dir, "log.T_400", "Temp")
+    # print(data)
 
 
 

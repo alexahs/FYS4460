@@ -36,9 +36,7 @@ def estimate_diffusion(dir):
 
     for i, filename in enumerate(log_files):
         msd_array[:,i] = np.squeeze(read_thermo(dir, log_files[i],
-                                     names_of_measurements,
-                                     n_time_steps,
-                                     step_window))
+                                     names_of_measurements))
 
         plt.plot(time_vals, msd_array[:,i], label=str(log_files[i][8:]))
     plt.legend()

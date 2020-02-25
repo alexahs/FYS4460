@@ -1,6 +1,8 @@
+#assign params
 variable TIME_STEPS equal 10000
 variable THERMO_STEP equal 100
 variable DUMP_STEP equal 10
+#end assign params
 
 #3d Lennard-Jones gas
 units lj                                #Lennard-Jones units

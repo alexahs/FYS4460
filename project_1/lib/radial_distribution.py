@@ -76,7 +76,8 @@ def plot_radial_distribution(dir,
 
 
     log_files = np.sort(log_files)
-
+    # print(log_files)
+    
     for file in log_files:
         bins, radials = read_rdf_dump(dir, file)
         plt.plot(bins, radials, label="T=" + file[10:])

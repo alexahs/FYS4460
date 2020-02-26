@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import os
 from .load_lammps_output import *
 
-
-
+"""
+part f)
+"""
 
 
 def estimate_diffusion(dir):

@@ -42,7 +42,7 @@ def main():
 
 
 
-    filename = "log.T_4000_scale_0.99"
+    # filename = "log.T_4000_scale_0.99"
 
 
     silicon_diffusion(dir)

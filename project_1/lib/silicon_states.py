@@ -43,15 +43,10 @@ def silicon_diffusion(dir):
         data_dict["msd_" + str(avg_temp)] = msd
 
 
-    # print(data_dict['T_1913'])
-    # print(data_dict['msd_1913'])
-
     n_files = len(log_files)
 
     diffusion = np.zeros(n_files)
 
-    print(data_dict["msd_" + str(avg_temps[0])].shape)
-    print(t.shape)
     #
     for i in range(n_files):
         diffusion[i] = np.polyfit(t, data_dict["msd_" + str(avg_temps[i])], deg=1)[0]

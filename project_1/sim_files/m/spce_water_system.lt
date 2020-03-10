@@ -1,5 +1,5 @@
 # -- file "spce-water-system.lt" --
-import "spce-simple.lt"
+import "spce_simple.lt"
 wat  = new SPCE [10].move(0,0,3.45)
                 [10].move(0,3.45,0)
                 [10].move(3.45,0,0)

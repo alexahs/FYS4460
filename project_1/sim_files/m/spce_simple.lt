@@ -22,12 +22,12 @@ SPCE {
     # We selected "atom_style full". That means we use this column format:
     # atomID molID atomType charge coordX coordY coordZ
     write("Data Atoms") {
-        $atom:O $mol:. @atom:O -0.8476 0.0000000 0.000000 0.00000$
-        atom:H1 $mol:. @atom:H 0.4238 0.8164904 0.5773590 0.00000$
-        atom:H2 $mol:. @atom:H 0.4238 -0.8164904 0.5773590 0.00000
+        $atom:O $mol:. @atom:O -0.8476 0.0000000 0.000000 0.00000
+        $atom:H1 $mol:. @atom:H 0.4238 0.8164904 0.5773590 0.00000
+        $atom:H2 $mol:. @atom:H 0.4238 -0.8164904 0.5773590 0.00000
     }
-    # All 3 atoms share same molID number which is unique for each water molecul
-    e# The "O" & "H1","H2" atoms in ALL molecules share same atom types: "O" & "H"
+    # All 3 atoms share same molID number which is unique for each water molecule
+    # The "O" & "H1","H2" atoms in ALL molecules share same atom types: "O" & "H"
     write_once("Data Masses") {
         # atomType mass
         @atom:O 15.9994

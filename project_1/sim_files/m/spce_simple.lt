@@ -29,10 +29,10 @@ SPCE {
     # All 3 atoms share same molID number which is unique for each water molecule
     # The "O" & "H1","H2" atoms in ALL molecules share same atom types: "O" & "H"
     write_once("Data Masses") {
-        # atomType mass
         @atom:O 15.9994
         @atom:H 1.008
-    }write("Data Bonds") {
+    }
+    write("Data Bonds") {
         # bondID bondType atomID1 atomID2
         $bond:OH1 @bond:OH $atom:O $atom:H1
         $bond:OH2 @bond:OH $atom:O $atom:H2

@@ -5,11 +5,11 @@ from tqdm import tqdm
 
 def get_sim_path(root_dir, part, sim):
 
-    return os.path.join(root_dir, "sim_files", str(part), "sim" + str(sim))
+    return os.path.join(root_dir, "sim_files", str(part), "sim" + str(sim) + "/")
 
 
 def get_file_path(dir, filename):
-    
+
     return os.path.join(dir, filename)
 
 

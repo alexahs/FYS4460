@@ -1,0 +1,133 @@
+variable    TIME_STEPS  equal 10
+variable    THERMO_STEP equal 50
+variable    DUMP_STEP   equal 100
+variable    EQUIL_STEPS_1 equal 10
+variable    EQUIL_STEPS_2 equal 10
+
+variable    T0          equal 0.851
+variable    T1          equal 0.851
+variable    Tdamp       equal 0.5
+
+variable    b           equal 5.72 #cell length in Å
+variable    sigma       equal 3.405
+variable    rhostar     equal 4/((${b}/${sigma})^3)
+variable    nCells      equal 20
+variable    L           equal ${nCells}*$b/${sigma}
+variable    L4          equal $L/4
+variable    seed        equal 87287
+units lj
+dimension 3
+boundary p p p
+atom_style atomic
+
+lattice fcc ${rhostar}
+region simbox block 0 ${nCells} 0 ${nCells} 0 ${nCells}
+create_box 2 simbox
+# create_atoms 1 box
+# group moving_particles type 1
+
+mass * 1.0
+variable max_rad equal 14
+variable radius_temp loop 4 ${max_rad}
+label run_loop
+
+reset_timestep 0
+create_atoms 1 box
+
+pair_style lj/cut 3.0
+pair_coeff * * 1.0 1.0 3.0
+
+# fix 1 all nve
+# fix 2 all temp/berendsen ${T0} ${T1} ${Tdamp}
+fix 1 all nvt temp ${T0} ${T1} ${Tdamp}
+
+thermo_style custom step temp press
+
+velocity all create ${T0} ${seed}
+thermo ${THERMO_STEP}
+run ${EQUIL_STEPS_1}
+
+variable nSpheres equal 15
+# variable low    equal 20/$b #2nm/b (cell length)
+# variable hi     equal 30/$b #3nm/b
+
+# variable r equal ${radius_temp}*(1-0.7*${radius_temp})/($b/${sigma})
+variable r equal exp(-${radius_temp}*0.5/${max_rad})*${radius_temp}/($b/${sigma})
+
+variable i loop ${nSpheres}
+label loop_shperes
+# variable r      equal ${radius_temp}/($b/${sigma})
+variable x      equal random(0,${nCells},${seed})
+variable y      equal random(0,${nCells},${seed})
+variable z      equal random(0,${nCells},${seed})
+
+
+region s${i} sphere $x $y $z $r side in
+# region flow${i} sphere $x $y $z $r side out
+
+next i
+jump SELF loop_shperes
+
+region solid union ${nSpheres} s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 &
+                        s11 s12 s13 s14 s15 side in # s16 s17 s18 s19 s20 side in
+region flow union ${nSpheres} s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 &
+                        s11 s12 s13 s14 s15 side out # s16 s17 s18 s19 s20 side out
+
+group moving_particles region flow
+group static_particles region solid
+
+variable remove_ratio equal 0.5
+delete_atoms porosity flow ${remove_ratio} ${seed}
+
+set group static_particles type 2
+
+set group static_particles vx 0.0 vy 0.0 vz 0.0
+unfix 1
+
+fix 1 moving_particles nvt temp ${T0} ${T1} ${Tdamp}
+fix 2 moving_particles addforce 0.1 0.0 0.0
+thermo ${THERMO_STEP}
+
+run ${EQUIL_STEPS_2}
+
+unfix 1
+fix 1 moving_particles nve
+
+reset_timestep 0
+compute moving_temp moving_particles temp
+variable velocity_cm equal vcm(moving_particles,x)
+
+variable time equal step*dt
+variable flowing equal count(moving_particles)/${remove_ratio}
+variable static equal count(static_particles)
+variable phi equal ${flowing}/(${static}+${flowing})
+
+print "porosity of system: ${phi}"
+
+thermo_style custom step v_time c_moving_temp v_velocity_cm press
+log data/log.spheres_r${r}_phi${phi}
+
+dump ${radius_temp} all custom ${DUMP_STEP} data/dump${radius_temp}.lammpstrj &
+            id type x y z vx vy vz
+
+
+thermo ${THERMO_STEP}
+
+run ${TIME_STEPS}
+
+unfix 1
+unfix 2
+uncompute moving_temp
+delete_atoms group moving_particles
+delete_atoms group static_particles
+region solid delete
+region flow delete
+
+variable a loop ${nSpheres}
+label delete_loop
+region s$a delete
+next a
+jump SELF delete_loop
+
+next radius_temp
+jump SELF run_loop

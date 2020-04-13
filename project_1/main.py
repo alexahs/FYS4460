@@ -26,10 +26,10 @@ def main():
 
     project_root_dir = os.path.dirname(os.path.abspath(__file__))
 
-    dir = get_sim_path(project_root_dir, "k", 1)
+    dir = get_sim_path(project_root_dir, "g", 1)
 
 
-    # plot_radial_distribution(dir)
+    plot_radial_distribution(dir)
     # estimate_diffusion(dir)
     # berendsen(dir, filename='log.lammps')
     # get_variables(dir)
@@ -45,7 +45,7 @@ def main():
     # filename = "log.T_4000_scale_0.99"
 
 
-    silicon_diffusion(dir)
+    # silicon_diffusion(dir)
 
 
     # log = lammps_logfile.File(get_file_path(dir, filename))

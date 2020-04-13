@@ -35,29 +35,6 @@ def velocity_profile(filename, nBins):
 
 
     infile = open(filename, "r")
-    # contents = infile.readlines()
-
-    # nAtoms = int(contents[3])
-
-    # nSkipLines = 9
-    # idxBeginRead = int(nAtoms + 2*nSkipLines)
-
-    # y = np.zeros(nAtoms)
-    # z = np.zeros(nAtoms)
-    # r = np.zeros(nAtoms)
-    # vx = np.zeros(nAtoms)
-
-    # j = 0
-    # for i in range(idxBeginRead, len(contents)):
-    #     # x y z vx vy vz
-    #     # y z vx
-    #     line = contents[i].split()
-    #     y[j] = float(line[0]) - L/2
-    #     z[j] = float(line[1]) - L/2
-    #     # rTemp = np.sqrt(y[j]**2 + z[j]**2)
-    #     r[j] = np.sqrt(y[j]**2 + z[j]**2)
-    #     vx[j] = float(line[2])
-    #     j += 1
 
     bins = np.linspace(0, a, nBins)
     counts = np.zeros(nBins)

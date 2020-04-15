@@ -5,7 +5,6 @@ from skimage import measure
 plt.style.use('ggplot')
 
 
-
 def spanning_cluster_density(m):
     nx, ny = m.shape
     labels, n_features = sp.measurements.label(m)
@@ -21,7 +20,6 @@ def spanning_cluster_density(m):
             density += region.extent
 
     return density
-
 
 def plot_percolation_probability(L_arr, p_arr, n_samples):
     fig, (ax1, ax2) = plt.subplots(2)
@@ -52,9 +50,10 @@ def plot_percolation_probability(L_arr, p_arr, n_samples):
     plt.show()
 
 
-
-L_arr = np.array([2**i for i in range(1, 8)]).astype(int)
-p_arr = np.linspace(0.1, 0.9, 100)
-n_samples = 1000
-plot_percolation_probability(L_arr, p_arr, n_samples)
-# plot_spanning_cluster_density()
+# if __name__ == '__main__':
+#
+#     L_arr = np.array([2**i for i in range(1, 8)]).astype(int)
+#     p_arr = np.linspace(0.1, 0.9, 100)
+#     n_samples = 1000
+#     plot_percolation_probability(L_arr, p_arr, n_samples)
+#     # plot_spanning_cluster_density()

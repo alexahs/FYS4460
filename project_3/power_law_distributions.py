@@ -4,11 +4,11 @@ plt.style.use('ggplot')
 
 
 
+N = 1e5
+np.random.seed(12)
+z = np.sort(np.random.random(int(N))**(-3 + 1))
 
-
-# z = np.sort(z)
-
-def cumulative_distribution(z):
+def cumulative_distribution_v1(z):
     n = len(z)
     cumulative = np.zeros(n)
     cumulative[0] = z[0]
@@ -17,6 +17,32 @@ def cumulative_distribution(z):
 
     return cumulative/np.max(cumulative)
 
+def compute_distribution_function(z):
+    n = len(z)
+    P = np.linspace(1, n + 1, n)/n
+    f = np.diff(P) / np.diff(z)
+    alpha, _ = np.polyfit(np.log(z[1:]), np.log(f), deg=1)
+    return P, f, alpha
+
+
+    plt.loglog(z[1:], f, label='$f(z)$')
+    plt.loglog(z, P, label='P(Z > z)')
+    plt.loglog(z, z**alpha, label=r'Fit to $f(z) = z^\alpha$')
+    plt.xlabel('$z$')
+    plt.legend()
+    # plt.axis([0, 10, 0, 1])
+    plt.show()
+
+
+def plot_distribution(z):
+    P, f, alpha = compute_distribution_function(z)
+    plt.loglog(z[1:], f, label='$f(z)$')
+    plt.loglog(z, P, label='P(Z > z)')
+    plt.loglog(z, z**alpha, label=r'Fit to $f(z) = z^\alpha$')
+    plt.xlabel('$z$')
+    plt.legend()
+    print(f'Fitted exponent alpha={alpha}$')
+    plt.show()
 
 
 def log_bin(z, n_bins=20, base=10):
@@ -30,28 +56,16 @@ def log_bin(z, n_bins=20, base=10):
     return log_bins, log_hist
 
 
-def plot_dist_function(z):
-    z = np.sort(np.random.random(int(N))**(-2))
-    Pz = cumulative_distribution(z)
-    fz = np.gradient(Pz)
-    plt.loglog(z, Pz, "b.", label=r'$P(Z > z)$')
-    plt.loglog(z, fz, "r.", label=r'$f(z)=dP/dz$')
-    plt.xlabel(r'z')
-
-
-    alpha, b = np.polyfit(np.log(z), np.log(fz), deg=1)
-    print(alpha)
-    plt.legend()
-    plt.show()
-
 
 def plot_log_bins(z):
     bins, fz = log_bin(z)
     plt.loglog(bins, fz, "ro")
     plt.show()
 
-N = 1e6
-np.random.seed(12)
-z = np.random.random(int(N))**(-3 + 1)
 
-plot_log_bins(z)
+plot_distribution(z)
+
+
+# plot_log_bins(z)
+
+# plot_dist_function(z)

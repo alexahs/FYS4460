@@ -25,7 +25,6 @@ def compute_distribution_function(z):
     return P, f, alpha
 
 
-
 def plot_distribution(z):
     P, f, alpha = compute_distribution_function(z)
     plt.loglog(z[1:], f, label='$f(z)$')
@@ -42,13 +41,14 @@ def plot_distribution(z):
     plt.show()
 
 
-def log_bin(z, n_bins=10, base=10):
-    log_max = np.ceil(np.max(np.log(z))/np.log(base))
-    # log_bins = np.logspace(0, log_max, n_bins)
-    log_bins = base**np.linspace(0, log_max)
+def log_bin(z, n_bins=10, base=10, log_max=None):
+    if log_max is None:
+        log_max = np.ceil(np.max(np.log(z))/np.log(base))
+    log_bins = base**np.linspace(0, log_max, n_bins)
+    # log_bins = np.logspace(0, log_max, n_bins, base=base)
     log_hist, _ = np.histogram(z, bins=log_bins)
     dz = np.diff(log_bins)
-    log_bins = 0.5*(log_bins[1:] + log_bins[:-1])
+    # log_bins = 0.5*(log_bins[1:] + log_bins[:-1])
     log_hist_normed = log_hist / dz
 
     return log_bins, log_hist_normed

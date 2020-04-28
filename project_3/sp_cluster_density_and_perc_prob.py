@@ -2,10 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.ndimage as sp
 from skimage import measure
+from numba import jit
 plt.style.use('ggplot')
 
 
-def spanning_cluster_density(m):
+def spanning_cluster_density(m, single_perc = False):
     nx, ny = m.shape
     labels, n_features = sp.measurements.label(m)
     regions = measure.regionprops(labels)
@@ -18,6 +19,8 @@ def spanning_cluster_density(m):
 
         if dx == nx or dy == ny:
             density += region.extent
+            if single_perc:
+                break
 
     return density
 

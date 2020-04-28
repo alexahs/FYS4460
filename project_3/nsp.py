@@ -32,7 +32,6 @@ def cluster_number_density(L, p, n_samples, n_bins, logbase=10, log_max=None, re
 
     s, N_s = log_bin(areas, n_bins=n_bins, base=logbase, log_max=log_max)
     nsp = N_s/(n_samples*L**2)
-    # print("RM",remove_zeros)
     if remove_zeros:
         idx = np.where(nsp > 1e-15)[0]
         return s[idx], nsp[idx]
@@ -146,17 +145,12 @@ def load_and_plot_sxi(L, n_samples):
     pc = 0.59275
     data_dir = "./data/s_xi/"
     run_dirs = os.listdir(data_dir)
-    # L = 128
-    # nsamp = 500
     fileno = 0
     run_dir = [d for d in run_dirs if str(L) in d and str(n_samples) in d][fileno]
     files = os.listdir(data_dir + run_dir)
     nsp_vs_s_files = [file for file in files if "nsp_vs_alls" in file]
     nsp_vs_sxi_file = [file for file in files if "nsp_vs_sxi" in file][0]
     sxi_vs_p_file = [file for file in files if "sxi_vs_p" in file][0]
-    # print(nsp_vs_s)
-    # print(nsp_vs_sxi)
-    # print(sxi_vs_p)
     os.chdir(data_dir + run_dir)
     for filename in nsp_vs_s_files:
         data = np.load(filename)
@@ -169,31 +163,108 @@ def load_and_plot_sxi(L, n_samples):
     nsp_vs_sxi = np.load(nsp_vs_sxi_file)
     sxi_vs_p = np.load(sxi_vs_p_file)
 
-    print(sxi_vs_p)
+    sxi_vals = sxi_vs_p[1]
+    pmpc_vals = abs(sxi_vs_p[0]-pc)
 
-    a, b = np.polyfit(np.log10(sxi_vs_p[1]), np.log10(np.abs(sxi_vs_p[1]-pc)), deg=1)
+    a, b = np.polyfit(np.log10(pmpc_vals), np.log10(sxi_vals), deg=1)
 
     sigma = -1/a
     print(f"Sigma = {sigma}")
-    # plt.plot(np.log10(nsp_vs_sxi[0]), np.log10(np.abs(sxi_vs_p[0]-pc)**a))
 
-    plt.loglog(nsp_vs_sxi[0], nsp_vs_sxi[1], 'ko', label=r"$F(s/s_{xi}) = 0.5$")
+
+
+    plt.loglog(nsp_vs_sxi[0], nsp_vs_sxi[1], 'ko', label=r"$F(s/s_{\xi}) = 0.5$")
+    plt.xlabel(r'$s$')
+    plt.ylabel(r'$n(s,p)$')
     plt.legend()
     plt.show()
     plt.clf()
 
     plt.plot(sxi_vs_p[0], sxi_vs_p[1], '-o')
+    plt.xlabel(r"$p$")
+    plt.ylabel(r"$s_\xi$")
+    plt.show()
+
+    plt.clf()
+
+    tau = 1.957
+
+    for filename in nsp_vs_s_files:
+        data = np.load(filename)
+        s = data[0]
+        nsp = data[1]
+        p_start = filename.index("p0") + 1
+        p_stop = filename.index("_L")
+        p = float(filename[p_start:p_stop])
+
+        x_vals = s*abs(p-pc)**(1/sigma)
+        y_vals = nsp*s**tau
+
+        plt.loglog(x_vals, y_vals, label=f"p={p}")
+
+    plt.legend()
+    plt.xlabel(r"$s|p-p_c|^{1/\sigma}$")
+    plt.ylabel(r"$s^\tau n(s,p)$")
+    plt.show()
+
+def percolating_mass(m):
+    L = m.shape[0]
+    mass = 0
+    labels, n_features = sp.measurements.label(m)
+    regions = measure.regionprops(labels)
+
+    n_percolating = 0
+    for region in regions:
+        x_start, y_start, x_stop, y_stop = region.bbox
+        dx = x_stop - x_start
+        dy = y_stop - y_start
+        if dx == L or dy == L:
+            mass += region.area
+            n_percolating +=1
+
+    if n_percolating != 0:
+        return mass/n_percolating
+    else:
+        return 0
+
+def mass_scaling():
+    pc = 0.59275
+    L_vals = [2**k for k in range(4, 12)]
+    n_samples = 100
+    M_vals = np.zeros(len(L_vals))
+    for i, L in tqdm(enumerate(L_vals)):
+        for j in range(n_samples):
+            z = np.random.random((L, L))
+            m = z<=pc
+            M_vals[i] += percolating_mass(m)
+
+    M_vals /= n_samples
+    np.save("./data/mass_percolating/masses.npy", np.vstack((L_vals, M_vals)))
+
+
+    D, C = np.polyfit(np.log(L_vals), np.log(M_vals), deg=1)
+    print(f"D:{D}")
+
+
+    plt.loglog(L_vals, np.exp(C)*L_vals**D, '--', label='Fit')
+    plt.loglog(L_vals, M_vals, 'o-', label='Data')
+    plt.xlabel(r"$L$")
+    plt.ylabel(r"$M(L)$")
+    plt.legend()
     plt.show()
 
 
 
-L = 2**9
-n_samples = 1000
-n_bins = 30
+
+# L = 2**9
+# n_samples = 1000
+# n_bins = 30
 
 # plot_nsp3()
 # run_nsp_vs_s(L=L, n_samples=n_samples, n_bins=n_bins)
-load_and_plot_sxi(L=L, n_samples=n_samples)
+# load_and_plot_sxi(L=L, n_samples=n_samples)
+
+mass_scaling()
 
 
 

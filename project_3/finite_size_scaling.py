@@ -123,11 +123,29 @@ def compute_pc():
     plt.legend()
     plt.show()
 
-compute_pc()
+# compute_pc()
+
+def Pi_data_collapse():
+    nu = 4/3
+    pc_approx = (0.5925 + 0.5936)/2
+    n_samples = 500
+    L_vals = np.load(data_dir + 'L_vals.npy')
+    p = np.load(data_dir + 'p_vals.npy')
+    filename = data_dir + 'perc_prob_nsamples' + str(n_samples) + '.npy'
+
+    for i, L in enumerate(L_vals):
+        Pi = np.load(filename)[i,:] # [L, p]
+        phi_arg = L**(1/nu)*(p - pc_approx)
+        plt.plot(phi_arg, Pi, label=f'L={L}')
 
 
+    plt.xlabel(r"$L^{1/\nu}(p-p_c)$")
+    plt.ylabel(r"$\Pi(p, L)$")
+    plt.legend()
+    plt.xlim((-2, 2))
+    plt.show()
 
-
+Pi_data_collapse()
 
 
 

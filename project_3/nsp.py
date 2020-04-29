@@ -269,8 +269,6 @@ mass_scaling()
 
 
 
-
-
 # plot_nsp2()
 
 

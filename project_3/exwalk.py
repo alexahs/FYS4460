@@ -27,6 +27,7 @@ while (len(perc)==0):
     lw,num = measurements.label(z)
     perc_x = intersect1d(lw[0,:],lw[-1,:])
     perc = perc_x[where(perc_x > 0)]
+    print(perc)
     print (ncount)
 
 if len(perc) > 0:
@@ -39,7 +40,7 @@ if len(perc) > 0:
     # zz now contains the spanning cluster
     figure()
     imshow(zz, interpolation='nearest', origin='upper') # Display spanning cluster
-    savefig("current.pdf")
+    # savefig("current.pdf")
     #show()
     #% Run walk on this cluster
     l,r = walk(zz)

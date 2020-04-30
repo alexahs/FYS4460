@@ -48,7 +48,7 @@ def log_bin(z, n_bins=10, base=10, log_max=None):
     # log_bins = np.logspace(0, log_max, n_bins, base=base)
     log_hist, _ = np.histogram(z, bins=log_bins)
     dz = np.diff(log_bins)
-    # log_bins = 0.5*(log_bins[1:] + log_bins[:-1])
+    log_bins = 0.5*(log_bins[1:] + log_bins[:-1])
     log_hist_normed = log_hist / dz
 
     return log_bins, log_hist_normed

@@ -22,7 +22,7 @@ def walk(z):
     i = where(z > 0)
     ix0 = 0 # starting row for walker is always 0
     iy0 = i[1][where(i[0] == 0)][0] # starting row (first element where there is a matching column which is zero)
-    print ("Starting walk in x=" + str(ix0) + " y=" + str(iy0))
+    # print ("Starting walk in x=" + str(ix0) + " y=" + str(iy0))
     # First do left-turning walker
     directions = zeros((4,2), int)
     directions [0,0] = -1 # west

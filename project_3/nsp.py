@@ -62,21 +62,33 @@ def plot_nsp1():
     plt.legend()
     plt.show()
 
-def plot_nsp2():
+def plot_nsp2(produce_data=False):
     pc = 0.59275
     L_vals = [2**k for k in range(4, 10)]
     n_samples = 1000
     n_bins = 20
     logbase = 10
-    for i, L in tqdm(enumerate(L_vals)):
-        s, nsp = cluster_number_density(L, pc, n_samples, n_bins, logbase)
-        np.save(f"./data/nsp_varying_L/nsp_p{pc:.5f}_L{L}.npy", np.vstack((s, nsp)))
-        plt.loglog(s, nsp, label=f'L={L}')
-        if L == L_vals[-1]:
-            tau, _ = np.polyfit(np.log(s), np.log(nsp), deg=1)
-            plt.loglog(s, s**tau, 'k--', label=r'Fit of $n(s,p)\propto s^{%.3f}$' %tau)
-            tau *= -1
-            print(f"tau={tau}")
+    if produce_data:
+        for i, L in tqdm(enumerate(L_vals)):
+            s, nsp = cluster_number_density(L, pc, n_samples, n_bins, logbase)
+            np.save(f"./data/nsp_varying_L/nsp_p{pc:.5f}_L{L}.npy", np.vstack((s, nsp)))
+            plt.loglog(s, nsp, label=f'L={L}')
+            if L == L_vals[-1]:
+                tau, b = np.polyfit(np.log(s), np.log(nsp), deg=1)
+                plt.loglog(s, np.exp(b)*s**tau, 'k--', label=r'Fit of $n(s,p)\propto s^{%.3f}$' %tau)
+                tau *= -1
+                print(f"tau={tau}")
+    else:
+
+        for i, L in enumerate(L_vals):
+            filename = f"./data/nsp_varying_L/nsp_p{pc:.5f}_L{L}.npy"
+            s, nsp = np.load(filename)
+            plt.loglog(s, nsp, label=f'L={L}')
+            if L == L_vals[-1]:
+                tau, b = np.polyfit(np.log(s), np.log(nsp), deg=1)
+                plt.loglog(s, np.exp(b)*s**tau, 'k--', label=r'Fit of $n(s,p)\propto s^{%.3f}$' %tau)
+                tau *= -1
+                print(f"tau={tau}")
 
     plt.xlabel(r's')
     plt.ylabel(r'n(s,p)')
@@ -264,12 +276,12 @@ def mass_scaling():
 # run_nsp_vs_s(L=L, n_samples=n_samples, n_bins=n_bins)
 # load_and_plot_sxi(L=L, n_samples=n_samples)
 
-mass_scaling()
+# mass_scaling()
 
 
 
 
-# plot_nsp2()
+plot_nsp2()
 
 
 # cluster_number_density(50, 0.55, 100)

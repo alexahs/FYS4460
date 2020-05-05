@@ -3,18 +3,12 @@ import sys
 import os
 from tqdm import tqdm
 
-def get_sim_path(root_dir, part, sim):
+def get_data_path(exercise):
+    root_dir = os.path.dirname(os.path.abspath(__file__))
 
-    return os.path.join(root_dir, "sim_files", str(part), "sim" + str(sim) + "/")
+    return os.path.join(root_dir, "sim_files", str(exercise) + "/")
 
-
-def get_file_path(dir, filename):
-
-    return os.path.join(dir, filename)
-
-
-
-def get_params(dir, lmp_suffix='.lmp',
+def get_dump_params(dir, lmp_suffix='.lmp',
                        env_start = '#assign params',
                        env_stop = '#end assign params',
                        verbose = False):
@@ -35,6 +29,7 @@ def get_params(dir, lmp_suffix='.lmp',
         if verbose:
             print('Looking up parameters from {}..'.format(lmp_script))
 
+    print(files)
 
     with open(dir + lmp_script, 'r') as infile:
         infile.readline()
@@ -48,7 +43,7 @@ def get_params(dir, lmp_suffix='.lmp',
                 try:
                     params[var_name] = int(var_val)
                 except:
-                    print("Unable to convert {} to integer".format(var_val))
+                    print("Unable to convert _{}_ to integer".format(var_val))
                     exit(1)
     infile.close()
 
@@ -80,7 +75,7 @@ def read_thermo(dir, filename, names_of_measurements):
             contains the quantities read from the log file.
     """
 
-    params = get_params(dir)
+    params = get_dump_params(dir)
 
     n_time_steps = params['TIME_STEPS']
     step_window = params['THERMO_STEP']
@@ -102,23 +97,50 @@ def read_thermo(dir, filename, names_of_measurements):
     return results
 
 
+
+
 def read_dump(dir, filename,
-              n_atoms = 4000,
-              n_info_lines = 9,
-              n_types = 3,
-              dims = 3,
+              n_time_steps = None,
+              step_window = None,
               save_to_npy = False):
 
-    params = get_params(dir)
-    n_time_steps = params['TIME_STEPS']
-    step_window = params['DUMP_STEP']
+    """
+    Naive function for reading lammps dumpfiles.
+    Dumped items must contain ID and type.
+    """
+
+
+    if n_time_steps is None and step_window is None:
+        params = get_dump_params(dir)
+        n_time_steps = params['TIME_STEPS']
+        step_window = params['DUMP_STEP']
+
+    n_info_lines = 9
+
+    with open(dir + filename, 'r') as infile:
+        for i in range(3):
+            skipline = infile.readline()
+        n_atoms = infile.readline()
+        try:
+            n_atoms = int(n_atoms)
+        except:
+            print(f"n_atoms could not be converted to int: {n_atoms}")
+        for i in range(4):
+            skipline = infile.readline()
+
+        item_str = infile.readline()
+        items = item_str.split(" ")[4:-1]
+
+
+    n_observables = len(items)
 
     n_time_windows = int(n_time_steps/step_window)
 
-    results = np.zeros((n_atoms, dims, n_time_windows))
+    results = np.zeros((n_atoms, n_observables, n_time_windows))
 
-
-    print('Loading dump..')
+    print(f'Reading dump of items: {items}')
+    print(f"# of time steps: {n_time_steps}")
+    print(f"# of atoms:      {n_atoms}")
     with open(dir + filename, 'r') as infile:
         for t in tqdm(range(n_time_windows)):
             for _ in range(n_info_lines):
@@ -127,18 +149,20 @@ def read_dump(dir, filename,
             for i in range(n_atoms):
                 results[i,:,t] = np.fromstring(infile.readline(),
                                                dtype='float',
-                                               count=n_types,
-                                               sep=' ')
+                                               count=n_observables + 2,
+                                               sep=' ')[2:]
         infile.close()
 
     if save_to_npy:
-        savefile = dir + 'dump.npy'
+        filename = "dump"
+        for item in items:
+            filename += "_" + item
+        filename += ".npy"
+        savefile = dir + filename
         np.save(savefile, results)
         print('Dump saved to %s' %savefile)
 
     return results
-
-
 
 
 

@@ -1,11 +1,11 @@
 #assign params
-variable TIME_STEPS equal 1000
+variable TIME_STEPS equal 5000
 variable THERMO_STEP equal 100
 variable DUMP_STEP equal 10
 #end assign params
 
-variable T equal 0.7
-variable fcc_density equal 0.8
+variable T equal 5.0
+variable fcc_density equal 0.7
 
 #3d Lennard-Jones gas
 units lj                                #Lennard-Jones units
@@ -26,6 +26,7 @@ atom_style atomic                       #simplest atom model, used for noble gas
 
 lattice fcc ${fcc_density}
 
+
 # lattice fcc 0.01                        #generates "face-centered-cubic" lattice points with scale 0.01 (reduced density)
 region simbox block 0 10 0 10 0 10      #define block region and give it the name "simbox"
 create_box 1 simbox                     #create the simulation box, which will contain only 1 type of atoms
@@ -40,21 +41,21 @@ pair_coeff 1 1 1.0 1.0 3.0              #specify the parameters of the LJ model 
 fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
 
 #equilibriate
-thermo 1000
-run 5000
+thermo 100
+run 1000
 
 reset_timestep 0
 
 #collect data
 compute myRDF all rdf 50
-fix 2 all ave/time 100 1 100 c_myRDF[*] file tmp.rdf_fcc_${fcc_density} mode vector
+fix 2 all ave/time 100 1 100 c_myRDF[*] file tmp.rdf_T_${T} mode vector
 # fix 2 all ave/time c_myRDF[*] file tmp.rdf mode vector
 
 thermo ${THERMO_STEP}
 
 # thermo_style custom
 
-# log log.rdf_T_${T}
+log log.rdf_T_${T}
 
 #dump (name 1) all atom states every 10 time steps, to file 'dump.lammpstrj' with format 'atom id, atom type, pos, vel'
 #dump 1 all custom ${DUMP_STEP} dump.lammpstrj id vx vy vz
@@ -65,7 +66,7 @@ thermo ${THERMO_STEP}
 run ${TIME_STEPS}                                #run simulation for 5000 time steps
 
 # clear
-# next iter
+# next T
 # jump SELF T_loop
 
 

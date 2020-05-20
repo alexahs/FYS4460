@@ -1,9 +1,9 @@
-variable TIME_STEPS equal 100000
+variable TIME_STEPS equal 20000
 variable THERMO_STEP equal 100
 variable DUMP_STEP equal 10
-variable T0 equal 2.5
-variable T1 equal 3.5
-variable Tdamp equal 100
+variable T0 equal 1.0
+variable T1 equal 3.0
+variable Tdamp equal 1
 
 
 #3d Lennard-Jones gas
@@ -23,8 +23,9 @@ velocity all create ${T0} 87287           #generate gauss distributed velocities
 pair_style lj/cut 3.0                   #define cutoff length of 3.0 (in units of sigma)
 pair_coeff 1 1 1.0 1.0 3.0              #specify the parameters of the LJ model -> interactions between atom types 1 and 1 (1.0 = general sigma value, 1.0 = overall eps value, 3.0 = cutoff)
 
-fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
-fix 2 all temp/berendsen ${T0} ${T1} ${Tdamp}
+# fix 1 all nve                           #specify what type of simulation, fix (called 1) is applied to all particles and runs at constant n-particles, constant volume and constant energy
+# fix 2 all temp/berendsen ${T0} ${T1} ${Tdamp}
+fix 1 all nvt temp ${T0} ${T1} ${Tdamp}
 
 thermo_style custom temp
 
@@ -34,6 +35,9 @@ thermo_style custom temp
 # dump 1 all custom ${DUMP_STEP} dump.lammpstrj id type x y z vx vy vz
 
 thermo ${THERMO_STEP}                              #output results to terminal and logfile 'log.lammps' every 100 time steps
+
+# log log.berendsen
+log log.nosehoover
 
 run ${TIME_STEPS}                                #run simulation for 5000 time steps
 

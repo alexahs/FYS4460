@@ -69,21 +69,3 @@ run ${TIME_STEPS}                                #run simulation for 5000 time s
 clear
 next iter
 jump SELF T_loop
-
-
-
-
-
-
-
-### Loops in lammps ###
-
-#label dt_loop
-#variable dt index 0.001 0.01 0.1 ...
-#...
-#dump dump.dt_${dt}
-#...
-#run 1000
-#clear
-#next dt
-#jump SELF dt_loop

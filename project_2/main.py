@@ -15,6 +15,7 @@ def main():
     dirSpheres = "./sim_files/spheres_porous/"
     logFilename = "log.lammps"
     dumpFilename = "dump.lammpstrj"
+    dirCylinder = "./sim_files/cylindrical"
 
     diffusion(dirSpheres, logFilename)
     # plotTemp(dirSpheres, logFilename)
@@ -89,8 +90,8 @@ def diffusion(dir, filename):
 
 
     plt.plot(time, msd)
-    plt.xlabel(r"$t/\tau$")
-    plt.ylabel(r"$\langle r^2(t) \rangle / \sigma^2}$")
+    plt.xlabel(r"$t$")
+    plt.ylabel(r"$\langle r^2(t) \rangle $")
     plt.show()
 
 

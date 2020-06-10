@@ -6,7 +6,6 @@ from tqdm import tqdm
 import numpy as np
 import os
 Lvals = [25,50,100,200,400]
-# Lvals = [25,50,100]
 pVals = logspace(log10(0.58), log10(0.85), 20)
 
 C = zeros((len(pVals),len(Lvals)),float)
@@ -45,21 +44,6 @@ for iL in tqdm(range(len(Lvals))):
                 C[pIndex,iL] = C[pIndex,iL] + c_eff
         C[pIndex,iL] = C[pIndex,iL]/nSamples
 
-
-
-
-
-dir = "data/"
-run = 2
-newdir = dir + f"run_{run}/"
-os.mkdir(newdir)
-
-filename_gpl = f"gpl_{nSamples}_samples_dims_pxL.npy"
-filename_pvals = f"pvals_{nSamples}_samples.npy"
-filename_Lvals = f"Lvals_{nSamples}_samples.npy"
-np.save(newdir + filename_gpl, C)
-np.save(newdir + filename_pvals, pVals)
-np.save(newdir + filename_Lvals, Lvals)
 
 for iL in range(len(Lvals)):
     L = Lvals[iL]

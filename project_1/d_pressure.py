@@ -37,12 +37,12 @@ def plot_pressure(dir):
 
     plt.plot(mean_temp[idx], mean_press[idx], label='Simulation results')
     plt.plot(mean_temp[idx], idea_gas_law(mean_temp[idx]), label='Ideal gas law')
-    plt.xlabel(r"Pressure $[P\sigma^3 / \epsilon]$")
-    plt.ylabel(r"Temperature $[ Tk_b/\epsilon]$")
+    plt.ylabel(r"Pressure $[P\sigma^3 / \epsilon]$")
+    plt.xlabel(r"Temperature $[ Tk_b/\epsilon]$")
     plt.legend()
     plt.show()
 
-# plot_pressure(dir)
+plot_pressure(dir)
 
 
 def plot_pressure_grid(dir):
@@ -86,7 +86,7 @@ def plot_pressure_grid(dir):
     plt.show()
 
 
-plot_pressure_grid(dir)
+# plot_pressure_grid(dir)
 
 
 

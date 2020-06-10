@@ -6,12 +6,13 @@ from pylab import *
 
 
 def simpleCluster():
-    p = 0.5
-    L = 20
+    p = 0.4
+    L = 10
     z = np.random.random((L, L))
     m = z<p
     lw, num = measurements.label(m)
     print(num)
+    print(lw)
 
     b = arange(lw.max() + 1)
     shuffle(b)
@@ -19,9 +20,13 @@ def simpleCluster():
 
     area = measurements.sum(m, lw, index=arange(lw.max() + 1))
     areaImg = area[lw]
-    imshow(areaImg, origin='lower')
+    cmap = plt.cm.magma
+    cmap.set_under('black')
+    imshow(areaImg, origin='lower', cmap=cmap, vmin=0.1, interpolation='none')
     colorbar()
     show()
+
+simpleCluster()
 
 def clusters():
     L = 100
@@ -165,4 +170,5 @@ def nsp2():
     loglog(sl,nsl,'.b')
     show()
 
-nsp2()
+# nsp2()
+# simpleCluster()

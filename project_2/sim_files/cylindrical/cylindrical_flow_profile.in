@@ -79,11 +79,12 @@ thermo ${THERMO_STEP}
 run ${EQUIL_STEPS_2}
 
 unfix 1
-fix 1 moving_particles nve
+# fix 1 moving_particles nve
 
 reset_timestep 0
 # compute moving_temp moving_particles temp
 # variable time equal step*dt
+fix 1 moving_particles nvt temp ${T0} ${T1} ${Tdamp}
 
 variable dump_final equal ${TIME_STEPS}-1
 

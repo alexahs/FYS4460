@@ -7,7 +7,7 @@ plt.style.use('ggplot')
 
 dir = get_data_path("f")
 
-def estimate_diffusion(dir):
+def plot_diffusion(dir):
 
     dir_files = os.listdir(dir)
 
@@ -58,4 +58,4 @@ def estimate_diffusion(dir):
 
 #
 
-estimate_diffusion(dir)
+plot_diffusion(dir)

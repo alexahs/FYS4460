@@ -1,4 +1,22 @@
+#assign params
+variable TIME_STEPS equal 1000
+variable THERMO_STEP equal 10
+variable DUMP_STEP equal 10
+#end assign params
 
+
+
+
+variable T0         equal 600
+variable T1         equal 1000
+variable n_temps    equal 4
+
+# variable T equal 300
+
+###LOOP 1###
+label T_loop
+variable iter loop ${n_temps}
+variable T equal ${T0}+(${T1}-${T0})*(${iter}-1)/${n_temps}
 
 # ----------------- Init Section -----------------
 
@@ -40,8 +58,36 @@ include "spce_water_system.in.settings"
 # run   50000
 #  ---- (end of examples) ----
 
+
+
 timestep        1.0
-dump            1 all custom 10 traj_npt.lammpstrj id mol type x y z ix iy iz
-fix             fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
-thermo          100
-run             1000
+# dump            1 all custom 10 traj_npt.lammpstrj id mol type x y z ix iy iz
+# fix             fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+fix             fxnpt all npt temp $T $T 10 iso 1.0 1.0 1000.0 drag 1.0
+thermo          10
+run             900
+
+reset_timestep 0
+
+compute myRDF all rdf 50
+compute msd all msd
+fix 2 all ave/time 100 1 100 c_myRDF[*] file data/log.rdf_T_${T} mode vector
+
+
+
+thermo_style custom step temp press c_msd[4]
+
+log data/log.msd_T_${T}
+thermo ${THERMO_STEP}
+
+run ${TIME_STEPS}                                #run simulation for 5000 time steps
+
+clear
+next iter
+jump SELF T_loop
+
+
+
+
+
+#

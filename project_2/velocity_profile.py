@@ -82,8 +82,8 @@ def velocity_profile(filename, nBins):
     plt.plot(bins, approx, "r", label="continuum result $u(r)$")
     plt.plot(bins, approx + b, "r--", label="$u(r) + b$, $b=%.3f$" %b)
     plt.scatter(bins, velocities, c="b", label="data")
-    plt.xlabel(r"$r/\sigma$")
-    plt.ylabel(r"$v_x \tau/\sigma$")
+    plt.xlabel(r"$r$")
+    plt.ylabel(r"$v_x$")
     plt.legend()
     plt.show()
 

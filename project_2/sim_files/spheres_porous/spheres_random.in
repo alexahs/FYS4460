@@ -1,11 +1,11 @@
-variable    TIME_STEPS  equal 2000
+variable    TIME_STEPS  equal 200
 variable    THERMO_STEP equal 50
 variable    DUMP_STEP   equal 1000
-variable    EQUIL_STEPS equal 1000
+variable    EQUIL_STEPS equal 200
 
 variable    T0          equal 1.5
 variable    T1          equal 1.5
-variable    Tdamp       equal 0.5
+variable    Tdamp       equal 0.1
 
 variable    b           equal 5.72 #cell length in Å
 variable    sigma       equal 3.405
@@ -38,7 +38,6 @@ fix 1 all nvt temp ${T0} ${T1} ${Tdamp}
 
 velocity all create ${T0} ${seed}
 thermo ${THERMO_STEP}
-print "Thermalizing.. ${EQUIL_STEPS} steps"
 run ${EQUIL_STEPS}
 
 variable nSpheres equal 20
@@ -80,7 +79,7 @@ fix 1 moving_particles nvt temp ${T0} ${T1} ${Tdamp}
 
 thermo ${THERMO_STEP}
 
-run 4000
+run 200
 
 unfix 1
 fix 1 moving_particles nve
@@ -94,8 +93,10 @@ variable time equal step*dt
 
 thermo_style custom step v_time temp press c_moving_temp c_my_msd[4]
 
-dump 1 moving_particles custom ${DUMP_STEP} dump.lammpstrj &
-            id type x y z vx vy vz c_my_stress[1] c_my_stress[2] c_my_stress[3]
+# dump 1 moving_particles custom ${DUMP_STEP} dump.lammpstrj &
+            # id type x y z vx vy vz c_my_stress[1] c_my_stress[2] c_my_stress[3]
+
+dump 1 all custom ${DUMP_STEP} dump.lammpstrj id type x y z vx vy vz
 
 
 thermo ${THERMO_STEP}

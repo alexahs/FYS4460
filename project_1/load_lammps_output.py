@@ -29,7 +29,6 @@ def get_dump_params(dir, lmp_suffix='.lmp',
         if verbose:
             print('Looking up parameters from {}..'.format(lmp_script))
 
-    print(files)
 
     with open(dir + lmp_script, 'r') as infile:
         infile.readline()

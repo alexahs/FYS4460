@@ -28,8 +28,9 @@ variable n_temps    equal 10
 
 ###LOOP 1###
 label T_loop
-variable iter loop ${n_temps}
-variable T equal ${T0}+(${T1}-${T0})*(${iter}-1)/${n_temps}
+# variable iter loop ${n_temps}
+# variable T equal ${T0}+(${T1}-${T0})*(${iter}-1)/${n_temps}
+variable T index 100 1000 2000 3000 5000
 
 # variable myTemp1 equal 8000.0
 # variable myTemp2 equal 10000.0
@@ -76,12 +77,22 @@ timestep        1.0e-3
 fix             1 all nvt temp ${T} ${T} 0.05
 # fix             1 all npt
 
-compute msd all msd
+run 500
+reset_timestep 0
+
+
+compute myRDF all rdf 50
+fix 2 all ave/time 100 1 100 c_myRDF[*] file radial_data/log.rdf_T_${T} mode vector
+
+
+
+thermo_style custom step temp press
+
+log radial_data/log.T_${T}
 
 
 # compute msd all msd
 # thermo_style custom c_msd[4]
-thermo_style custom time temp press c_msd[4]
 
 log log.T_${T}
 
@@ -93,7 +104,7 @@ run             ${TIME_STEPS}
 
 
 clear
-next iter
+next T
 jump SELF T_loop
 
 
